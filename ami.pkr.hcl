@@ -11,12 +11,12 @@ packer {
 
 // The source block configures a specific builder plugin, which is then invoked by a build block.
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "justin-shaw-nodejs-ami"
+  ami_name      = "node-ami-test-1234567890"
   instance_type = "t2.micro"
   region        = "us-west-1"
   source_ami_filter {
     filters = {
-      name                = "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*"
+      name                = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
@@ -28,7 +28,7 @@ source "amazon-ebs" "ubuntu" {
 
 // The build block defines what Packer should do with the Docker container after it launches.
 build {
-  name    = "nodejs-ami"
+  name = "nodejs-ami"
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
@@ -38,9 +38,9 @@ build {
   // as Chef or Puppet.
   provisioner "shell" {
     inline = [
-      "sudo apt update",
-      "sudo apt install nodejs",
-      "sudo apt install npm",
+      "curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -",
+      "sudo apt-get install -y nodejs",
+      "sudo apt-get install -y npm",
     ]
   }
 }
